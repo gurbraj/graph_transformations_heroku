@@ -1,0 +1,487 @@
+<style>
+input {
+  display: none;
+}
+label {
+  display: none;
+}
+ul {
+  display: none;
+}
+</style>
+
+<!-- page 195 -->
+<div>
+  <button id="a_button" type="button">Enable vertical stretch, vertical compression, x-axis reflection </button>
+</div>
+  <!-- page 197 -->
+  <button id="b_button" type="button">Enable horizontal stretch, horizontal compression, y-axis reflection</button>
+<div>
+  <button id="h_button" type="button">Enable horizontal translation </button>
+
+  <button id="k_button" type="button">Enable vertical translation </button>
+</div>
+
+<div>
+  <form action="" method="">
+    <div>
+      <label id="a_label">a</label>
+      <input id="a" type="float" placeholder="" >
+    </div>
+    <div>
+      <label id="b_label">b</label>
+      <input id="b" type="float" >
+    </div>
+    <div>
+      <label id="h_label">h</label>
+      <input id="h" type="float" >
+    </div>
+    <div>
+      <label id="k_label">k</label>
+      <input id="k" type="float">
+    </div>
+<div>
+
+  <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">change coordinates<span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <input id="x_start" type="float" placeholder="x-start" >
+    <input id="x_end" type="float" placeholder="x-end">
+    <li role="separator" class="divider"></li>
+    <input id="y_start" type="float" placeholder="y-start" >
+    <input id="y_end" type="float" placeholder="y-end">
+  </ul>
+</li>
+
+  <div>
+    <form action="" method="">
+      <div>
+        <input id="x_start" type="float" placeholder="x-start" >
+      </div>
+      <div>
+        <label >x-axis end</label>
+        <input id="x_end" type="float" placeholder="x-end">
+      </div>
+      <div>
+        <label >y-axis start</label>
+        <input id="y_start" type="float" placeholder="y-start" >
+      </div>
+      <div>
+        <label >y</label>
+        <input id="y_end" type="float" placeholder="y-end">
+      </div>
+  <div>
+
+<h5>In natural language:</h5>
+<ul id="natural_language"></ul>
+<ul id="a_natural" ></ul>
+<ul id="x_reflection"></ul>
+<ul id="b_natural" ></ul>
+<ul id="y_reflection"></ul>
+<ul id="h_natural"></ul>
+<ul id="k_natural"></ul>
+
+<canvas id="myChart"  width="800" height="400"></canvas>
+
+
+<script>
+var canvas = document.getElementsByTagName('canvas')[0];
+canvas.width  = 1200;
+canvas.height = 400;
+
+var updated_label=function(a,b,h,k){
+  var original_function="<%=@model_function.name%>"
+
+  if (a!=="") {
+  var original_function=  a  + " * " + original_function;
+  }
+  if (b!=="") {
+  var original_function=original_function.replace("x"," "+ b + " * x" );
+  //below is needed to ensure substitution of an eventual second occurance of a x
+  var index=original_function.split("").findIndex(function(a){return a==="x"});
+  var substring=original_function.substring(index+1, original_function.length );
+  var substring_modified = substring.replace("x"," "+ b + " * x" );
+  var original_function = original_function.substring(0,index+1) + substring_modified
+  }
+  if (h!=="") {
+  var original_function=original_function.replace("x"," ( x - " +   h + " ) " );
+  //below is needed to ensure substitution of an eventual second occurance of a x
+  var index=original_function.split("").findIndex(function(a){return a==="x"});
+  var substring=original_function.substring(index+1, original_function.length );
+  var substring_modified = substring.replace("x"," ( x - " +   h + " ) " );
+  var original_function = original_function.substring(0,index+1) + substring_modified
+  }
+  if (k!=="") {
+  var original_function=original_function + " + " + k;
+  }
+  return "T(x) = " + original_function
+
+}
+
+//eval(a)toString() is used to ensure that decimals and fractions get the same mapping
+var eval_to_string=function(a){
+  if (a==="") {
+    return  ""
+  } else {
+    return eval(a).toString()
+  }
+}
+
+var base_url="http://localhost:3000/functions/" + <%=@model_function.id%> +".json"
+
+var ctx = document.getElementById("myChart");
+
+var dataset = {
+    labels: <%= @func.x_vals %>,
+    datasets: [
+        {
+            label: "transformed function: T(x)=f(x)",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 0.5,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 0.5,
+            pointHitRadius: 5,
+            data: <%= @func.y_vals %>,
+        },
+        {
+            label: "orginal function: f(x) = <%=@model_function.name%> ",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 0.01,
+            pointHoverRadius: 0.005,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 0.01,
+            pointHitRadius: 0.001,
+            data: <%= @func.y_vals %>,
+        }
+    ]
+};
+
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: dataset,
+
+    options:{
+      showLines: true,
+      responsive: false,
+      scales: {
+            yAxes: [{
+                ticks: {
+                    max: 3,
+                    min: -3,
+                    stepSize: 1
+                }
+            }]
+        }
+    }
+});
+
+$(document).ready(function(){
+  $("#natural_language").append( "<%=@model_function.name%>" + " have been:");
+
+  $("#y_start").show();
+  $("#y_end").show();
+  $("#x_start").show();
+  $("#x_end").show();
+
+  $("#y_start").typeWatch( {
+    callback: function(){
+      var y_start=eval($('#y_start').val());
+      myChart.config.options.scales.yAxes[0].ticks.min=y_start
+      myChart.update()
+    },
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+  $("#y_end").typeWatch( {
+    callback: function(){
+      var y_end=eval($('#y_end').val());
+      myChart.config.options.scales.yAxes[0].ticks.max=y_end
+      myChart.update()
+    },
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+  $("#x_start").typeWatch( {
+    callback: function(){
+      var x_start=eval($('#x_start').val());
+      myChart.config.options.scales.xAxes[0].ticks.min=x_start
+      myChart.update()
+    },
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+  $("#x_end").typeWatch( {
+    callback: function(){
+      var x_end=eval($('#x_end').val());
+      myChart.config.options.scales.xAxes[0].ticks.max=x_end
+      myChart.update()
+    },
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+
+
+  $('#a_button').on('click', function(){
+  $('#a_button').fadeOut();
+  $('#a').fadeIn();
+  $('#a_label').fadeIn();
+  })
+
+var a_callback=function() {
+  var a=$("#a").val();
+  var b=$("#b").val();
+  var h=$("#h").val();
+  var k=$("#k").val();
+
+  var a_abs=Math.abs(eval(a));
+  $.ajax({method: "GET",
+  url: base_url,
+  data : {"a": eval_to_string(a), "b":eval_to_string(b), "h":eval_to_string(h), "k":eval_to_string(k) },
+  success: function(data){
+    var y_vals=data[1];
+    myChart.config.data.datasets[0].data=y_vals;
+    myChart.config.options.animation.duration=4000;
+    myChart.config.data.datasets[0].label= updated_label(a,b,h,k)
+    myChart.config.data.datasets[0].borderColor="rgb(16, 3, 3)"
+    myChart.config.data.datasets[0].pointBorderColor="rgb(16, 3, 3)"
+    myChart.update()
+
+    if (a_abs === 1) {
+      $("#x_reflection").html("");
+    }
+
+    if (a_abs > 1)  {
+    $("#a_natural").html(" <strong>vertically stretched</strong> by a factor of <strong>"+ a +"</strong> units");
+    $("#x_reflection").html("");
+    }
+
+    if ( 0<a_abs && a_abs<1 ) {
+      $("#a_natural").html(" <strong>vertically compressed</strong> by a factor of <strong>"+ a + "</strong> units");
+      $("#x_reflection").html("");
+    }
+
+    if (eval(a)<0) {
+      $("#x_reflection").html(" reflected around the x-axis");
+    }
+
+    if (a === "") {
+      $("#a_natural").html("");
+      $("#x_reflection").html("");
+    }
+
+    $("#x_reflection").fadeIn();
+    $("#a_natural").fadeIn();
+    $('#natural_language').fadeIn();
+
+    }
+
+  })
+
+  }
+
+  $("#a").typeWatch( {
+    callback: a_callback,
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+
+  $('#b_button').on('click', function(){
+    $('#b_button').fadeOut();
+    $('#b').fadeIn();
+    $('#b_label').fadeIn();
+  })
+
+  var b_callback=function(){
+      var a=$("#a").val();
+      var b=$("#b").val();
+      var h=$("#h").val();
+      var k=$("#k").val();
+
+      var b_abs=Math.abs(eval(b))
+      $.ajax({method: "GET",
+      url: base_url,
+      data : {"a": eval_to_string(a), "b": eval_to_string(b), "h": eval_to_string(h), "k": eval_to_string(k) },
+      success: function(data){
+        var x_vals=data[0];
+        var y_vals=data[1];
+        myChart.config.data.datasets[0].data=y_vals
+        myChart.config.options.animation.duration=4000;
+        myChart.config.data.datasets[0].label= updated_label(a,b,h,k)
+        myChart.config.data.datasets[0].borderColor="rgb(100, 1, 1)"
+        myChart.config.data.datasets[0].pointBorderColor="rgb(100, 1, 1)"
+        myChart.update()
+
+        if (b_abs === 1) {
+          $("#y_reflection").html("");
+        }
+
+        if (b_abs > 1)  {
+        $("#b_natural").html(" <strong>horizontally compressed</strong> by a factor of <strong> 1/("+ b +")</strong> units");
+        $("#y_reflection").html("");
+        }
+
+        if ( 0<b_abs && b_abs<1 ) {
+          $("#b_natural").html(" <strong>horizontally stretched</strong> by a factor of <strong> 1/("+ b + ")</strong> units");
+          $("#y_reflection").html("");
+        }
+
+        if (eval(b)<0) {
+          $("#y_reflection").html(" reflected around the y-axis");
+        }
+
+        if (b === "") {
+          $("#b_natural").html("");
+          $("#y_reflection").html("");
+        }
+
+        $("#b_natural").fadeIn();
+        $("#y_reflection").fadeIn();
+        $('#natural_language').fadeIn()
+      }
+    })
+  }
+
+  $("#b").typeWatch( {
+    callback: b_callback,
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+
+  $('#h_button').on('click', function(){
+    $('#h_button').fadeOut();
+    $('#h').fadeIn();
+    $('#h_label').fadeIn();
+  })
+
+  var h_callback=function(){
+    var a=$("#a").val();
+    var b=$("#b").val();
+    var h=$("#h").val();
+    var k=$("#k").val();
+
+    $.ajax({method: "GET",
+    url: base_url,
+    data : {"a": eval_to_string(a), "b": eval_to_string(b), "h": eval_to_string(h), "k": eval_to_string(k) },
+    success: function(data){
+      var x_vals=data[0];
+      var y_vals=data[1];
+      myChart.config.data.datasets[0].data=y_vals
+      myChart.config.options.animation.duration=4000;
+      myChart.config.data.datasets[0].label=updated_label(a,b,h,k)
+      myChart.config.data.datasets[0].borderColor="rgba(23, 114, 79, 0.94)"
+      myChart.config.data.datasets[0].pointBorderColor="rgba(23, 114, 79, 0.94)"
+      myChart.update()
+
+      if (eval(h) > 0)  {
+      $("#h_natural").html(" <strong>horizontally translated</strong> by <strong>" + h + "</strong> units to the <strong>right</strong>" );
+
+      }
+      if ( eval(h)<0 ) {
+        $("#h_natural").html(" <strong>horizontally translated</strong> by <strong>" + -h + "</strong> units to the <strong>left</strong>" );
+
+      }
+      if (h === "") {
+        $("#h_natural").html("");
+      }
+      $("#h_natural").fadeIn();
+      $('#natural_language').fadeIn()
+    }
+  })
+  }
+
+  $("#h").typeWatch( {
+    callback: h_callback,
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+
+  $('#k_button').on('click', function(){
+    $('#k_button').fadeOut();
+    $('#k').fadeIn();
+    $('#k_label').fadeIn();
+  })
+
+  var k_callback=function(){
+    var a=$("#a").val();
+    var b=$("#b").val();
+    var h=$("#h").val();
+    var k=$("#k").val();
+
+    $.ajax({method: "GET",
+    url: base_url,
+    data : {"a": eval_to_string(a), "b": eval_to_string(b), "h": eval_to_string(h), "k": eval_to_string(k)},
+    success: function(data){
+      var x_vals=data[0];
+      var y_vals=data[1];
+      myChart.config.data.datasets[0].data=y_vals
+      myChart.config.options.animation.duration=4000;
+      myChart.config.data.datasets[0].borderColor="rgba(23, 45, 79, 0.94)"
+      myChart.config.data.datasets[0].pointBorderColor="rgba(23, 45, 79, 0.94)"
+      myChart.config.data.datasets[0].label= updated_label(a,b,h,k)
+      myChart.update()
+
+      if (eval(k) > 0)  {
+      $("#k_natural").html(" <strong>vertically translated</strong> by <strong>" +k + "</strong> units  <strong>up</strong>" );
+      }
+
+      if ( eval(k)<0 ) {
+        $("#k_natural").html(" <strong>vertically translated</strong> by <strong>" + -k + "</strong> units <strong>down</strong>" );
+      }
+
+      if (k === "") {
+        $("#k_natural").html("");
+      }
+
+      $("#k_natural").fadeIn();
+      $('#natural_language').fadeIn()
+    }
+  })
+
+  }
+
+  $("#k").typeWatch( {
+    callback: k_callback,
+    wait: 750,
+    highlight: true,
+    allowSubmit: false,
+    captureLength: 1
+  } );
+})
+</script>

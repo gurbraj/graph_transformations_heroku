@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Demo2</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+<script src="https://use.fontawesome.com/d11f5f62a2.js"></script>
+  <nav class="navbar navbar-fixed-top navbar-inverse">
+        <div class="container">
+          <!-- logo and company name -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+            <div class="navbar-collapse collapse">
+
+
+          <a class="navbar-right" href="#">
+            <!-- <span class="glyphicon glyphicon-fire logo"> -->
+            <!--img class="logo-image" src="images/logo.png"-->
+            <i class="fa fa-line-chart fa-2x" aria-hidden="true" style="color:DarkGray;position: absolute;
+    top: 8px;
+    right: 16px;
+    "></i>
+          </a>
+          <h2  class="navbar-left company-name">Graph transformations</h2>
+          <!-- navigation items -->
+          <ul class="nav navbar-nav navbar-right">
+            <li><%= link_to "All Functions", functions_path%></li>
+            <li><%= link_to "Create New Function", new_function_path%></li>
+
+          </ul>
+        </div>
+      </nav>
+</head>
+<body bgcolor="#F5F5F5" >
+
+
+
+  <% link_to "All Functions", functions_path %>
+
+  <% link_to "New Function", new_function_path %>
+
+
+
+
+<%= mathjax_tag %>
+<%= yield %>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+<h1>All Functions</h1>
+
+<% @functions.each do |f| %>
+  <div>
+    <hr>
+    <%= link_to f.name, function_path(f) %>
+  </div>
+<% end %>

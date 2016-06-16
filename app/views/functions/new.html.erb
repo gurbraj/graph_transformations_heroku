@@ -1,0 +1,11 @@
+<%=simple_form_for @function, :url => {:action => "create"} do |f| %>
+  <p>
+    <p>
+      <p>
+  <%= f.input :name, class:"form-control", placeholder: "Use Ruby syntax" %>
+  <p>
+    <p>
+      <p>
+        <p>
+  <%=f.submit({class: "btn btn-primary"})%>
+<%end%>

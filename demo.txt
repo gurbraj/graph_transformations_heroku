@@ -1,0 +1,221 @@
+rails new demo -d postgresql -T
+
+./configure; make; make install    in gsl direcotry to install GSL
+
+
+http://rb-gsl.rubyforge.org/files/rdoc/ref_rdoc.html documentation for GNU scientific library
+
+Ruby/GSL is a ruby interface to the GNU Scientific Library (GSL), for numerical computing with Ruby.
+
+
+
+require("gsl")
+
+brew install gsl
+
+https://github.com/SciRuby/rb-gsl
+
+
+####
+
+
+poly=GSL::Poly[1,2]
+
+http://www.gnu.org/software/plotutils/plotutils.html       #plot library
+http://www.gnu.org/software/plotutils/manual/en/plotutils.html   # manual
+
+http://www.gnu.org/software/plotutils/manual/plotutils_ex.pdf
+
+
+require 'rubygems' # if installed via RubyGems
+require 'gsl'
+
+
+
+###############################stoppen the GSL and went to SCIRUBY
+
+https://github.com/sciruby/sciruby
+
+
+https://github.com/SciRuby/gnuplotrb
+
+Hope you love daru! For enhanced interactivity and better visualizations,
+consider using gnuplotrb and nyaplot with iruby. For statistics use the
+statsample family.
+
+Read the README for interesting use cases and examples
+
+
+/////////////////
+Welcome to Nyaplot
+
+ ___/|
+ o.O|
+ (___)
+   U
+
+Thank you for installing Nyaplot gem.
+
+We strongly recommend you to install IRuby, an interactive
+Ruby environment on web browser at the same time.
+
+$ gem install iruby
+
+If you wonder how to use Nyaplot, see /path/to/nyaplot/examples/notebook
+and run `iruby notebook` in the directory.
+You can find these notebook on your browser:
+http://nbviewer.ipython.org/github/domitry/nyaplot/blob/master/examples/notebook/Index.ipynb
+
+You can also use nyaplot without IRuby like /path/to/nyaplot/examples/rb
+or on your browser:
+https://github.com/domitry/nyaplot/tree/master/examples/rb
+
+Feel free to raise Issue or Pull-request on GitHub.
+Most pull-request might be accepted unless it is broken or too destructive.
+
+Enjoy Nyaplot!
+/////////////////////
+
+
+installed iruby
+https://www.quora.com/Whats-the-best-graphing-charting-package-for-use-in-Rails-apps
+
+
+notebooks on sciruby examples
+https://github.com/SciRuby/sciruby-notebooks
+
+
+###some examples on plotting
+http://wanzuhao.com/
+
+
+def f(x)
+ Math.exp(x)
+end
+
+
+#### canvas
+
+http://gnuplot.sourceforge.net/demo_canvas_4.6/
+
+
+set terminal canvas
+gnuplot
+
+plot(x)
+
+#######
+
+
+Gnuplot.open do |gp|
+  Gnuplot::Plot.new( gp ) do |plot|
+    plot.terminal "canvas"
+    plot.xrange "[-10:10]"
+    plot.title  "Sin Wave Example"
+    plot.ylabel "x"
+    plot.xlabel "sin(x)"
+
+    plot.data << Gnuplot::DataSet.new( "sin(x)" ) do |ds|
+      ds.with = "lines"
+      ds.linewidth = 4
+    end
+
+  end
+
+end
+
+
+#### https://github.com/SciRuby/gnuplotrb is a different gem
+from   https://github.com/rdp/ruby_gnuplot   i am using the second one.
+
+
+###########
+ the javascripts that are being called
+https://github.com/gnuplot/gnuplot/tree/master/term/js
+
+####################
+create controller for every function
+  for everyone of these controllers,
+      can have different transformation controller (finds the function, applies transformation to it )      --  horizontal shifts, vertical shifts, amplification, stretches, all combos (this option requires submit before )
+
+        horizontal shift works as follows: on h there is an j-query that sends an ajax req to the same controller but to a different function TRANSFORM, passes the parameter to it
+          the function TRANSFORM makes new @x and @y and sends it as a json-object.
+
+
+
+  1)have a create action that generates x,y, redirect to show.
+  2)show contains the javascript that renders the graph.
+        the javascript also has
+          1)jquery on $('a')   that sends an ajax back to the controller, asking what function the user is on. pass
+          2)  on success:
+
+
+create a model that randomly sends the user to the different functions
+
+
+
+#####TO DO
+
+1) make it so that the scales are not responsive!  CHECK
+2) when type in 22
+3) radians for sin n cos
+4) when zero, it makes it flat                CHECK
+5) have the original graph showing on the transformation
+
+6)  make the algebreic expression better. is hacky right now.
+
+
+7) fix natural language
+8) give some options to the user,   like : x-axis, y-axis    number of points?   color maybe
+
+started on demos2(new rails project)
+
+bin/rails g controller sin_functions
+
+bin/rails g controller polynomials
+
+
+##########################################################
+
+bin/rails g model function name:string
+bin/rails g controller functions
+
+
+#todo
+fix show all functions
+fix activating the different modes (a button)
+link to create
+
+soundeffects
+colors
+xaxis y axis adjustment
+
+comments? for users
+
+bootstrap that shit
+
+sinus radius n stuff
+pretty equations
+get the algebra-part on the show page
+
+fix! compress by a factor of -2
+
+
+###
+questions:  why the - in x**2
+
+
+######to do before presentation
+horizontally stretched by a factor of 1/1/2 units -
+clean and remove dead code
+add tests
+fix the "compressed by a factor of -1/3"
+label x and y axis
+think about what to say
+why does the links in the navbar disapear
+
+drop table? what function to use.
+
+level-up
+level-down
+line-chart logo
