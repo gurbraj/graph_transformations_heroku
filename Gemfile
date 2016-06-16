@@ -38,6 +38,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 #gem 'gnuplot'
 #gem 'rbczmq'
 gem 'mathjax-rails'
+gem 'simple_form'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -45,7 +46,6 @@ group :development, :test do
   gem 'awesome_print'
   gem 'hirb'
   gem 'pry'
-  gem 'simple_form'
 end
 
 group :development do
