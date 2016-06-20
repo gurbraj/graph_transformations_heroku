@@ -1,8 +1,14 @@
 Rails.application.routes.draw do
 
   mathjax 'mathjax'
-  resources :sin_functions
+
   resources :functions
+
+  resources :sessions, only: [:new, :create] do
+    delete :destroy, on: :collection
+  end
+
+  resources :welcome
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
