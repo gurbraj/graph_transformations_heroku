@@ -127,7 +127,10 @@ var eval_to_string=function(a){
   }
 }
 
-var base_url="http://localhost:3000/functions/" + <%=@model_function.id%> +".json"
+// below base_url should be used when the application is run on the local server
+//var base_url="http://localhost:3000/functions/" + <%=@model_function.id%> +".json"
+
+var base_url="https://graph-transformations-heroku.herokuapp.com/functions/" + <%=@model_function.id%> +".json"
 
 var ctx = document.getElementById("myChart");
 
